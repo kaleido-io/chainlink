@@ -1,3 +1,4 @@
+import { PropsWithChildren } from 'react'
 import { Reducer } from 'redux'
 import * as jsonapi from '@chainlink/json-api-client'
 import { Actions, NotifyErrorAction } from 'reducers/actions'
@@ -80,7 +81,7 @@ export type TextNotification = string
 
 export interface ComponentNotification {
   component: React.FC<any>
-  props: any
+  props: PropsWithChildren<{ msg?: string }>
 }
 
 export type Notification = TextNotification | ComponentNotification

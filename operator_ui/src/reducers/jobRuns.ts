@@ -37,7 +37,7 @@ const reducer: Reducer<State, Actions> = (state = INITIAL_STATE, action) => {
     case 'RECEIVE_DELETE_SUCCESS': {
       const remainingItems = pickBy(
         state.items,
-        ({ attributes }) => attributes.jobId !== action.response,
+        ({ attributes }) => attributes.jobId !== action.id,
       )
       return { ...state, items: remainingItems }
     }

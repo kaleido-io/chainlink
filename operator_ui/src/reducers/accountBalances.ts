@@ -1,7 +1,7 @@
 import { Reducer } from 'redux'
 import { Actions } from './actions'
 
-export type State = Record<string, any>
+export type State = Record<string, object>
 
 const INITIAL_STATE: State = {}
 
