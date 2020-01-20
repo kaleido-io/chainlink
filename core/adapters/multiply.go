@@ -3,34 +3,38 @@
 package adapters
 
 import (
+	"encoding/json"
 	"fmt"
 	"math/big"
-	"strconv"
 
 	"chainlink/core/store"
 	"chainlink/core/store/models"
-	"chainlink/core/utils"
 )
-
-// Multiplier represents the number to multiply by in Multiply adapter.
-type Multiplier float64
-
-// UnmarshalJSON implements json.Unmarshaler.
-func (m *Multiplier) UnmarshalJSON(input []byte) error {
-	input = utils.RemoveQuotes(input)
-	times, err := strconv.ParseFloat(string(input), 64)
-	if err != nil {
-		return fmt.Errorf("cannot parse into float: %s", input)
-	}
-
-	*m = Multiplier(times)
-
-	return nil
-}
 
 // Multiply holds the a number to multiply the given value by.
 type Multiply struct {
-	Times *Multiplier `json:"times"`
+	Times *big.Float `json:"-"`
+}
+
+type jsonMultiply struct {
+	Times *JSONBigFloat `json:"times"`
+}
+
+// MarshalJSON implements the json.Marshal interface.
+func (ma *Multiply) MarshalJSON() ([]byte, error) {
+	jsonObj := jsonMultiply{(*JSONBigFloat)(ma.Times)}
+	return json.Marshal(jsonObj)
+}
+
+// UnmarshalJSON implements the json.Unmarshal interface.
+func (ma *Multiply) UnmarshalJSON(buf []byte) error {
+	var jsonObj jsonMultiply
+	err := json.Unmarshal(buf, &jsonObj)
+	if err != nil {
+		return err
+	}
+	ma.Times = jsonObj.Times.Value()
+	return nil
 }
 
 // Perform returns the input's "result" field, multiplied times the adapter's
@@ -46,7 +50,7 @@ func (ma *Multiply) Perform(input models.RunInput, _ *store.Store) models.RunOut
 	}
 
 	if ma.Times != nil {
-		i.Mul(i, big.NewFloat(float64(*ma.Times)))
+		i.Mul(i, ma.Times)
 	}
 	return models.NewRunOutputCompleteWithResult(i.String())
 }
