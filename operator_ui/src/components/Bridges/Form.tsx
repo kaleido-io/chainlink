@@ -23,6 +23,10 @@ const styles = (theme: Theme) =>
     },
     button: {
       marginTop: theme.spacing.unit * 3,
+      paddingTop: theme.spacing.unit,
+      paddingBottom: theme.spacing.unit,
+      paddingLeft: theme.spacing.unit * 5,
+      paddingRight: theme.spacing.unit * 5,
     },
     flash: {
       textAlign: 'center',

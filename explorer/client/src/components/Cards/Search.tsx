@@ -26,6 +26,12 @@ const styles = ({ spacing }: Theme) =>
       paddingLeft: spacing.unit * 8,
       paddingRight: spacing.unit * 8,
     },
+    button: {
+      paddingTop: spacing.unit,
+      paddingBottom: spacing.unit,
+      paddingLeft: spacing.unit * 5,
+      paddingRight: spacing.unit * 5,
+    },
     logo: {
       display: 'flex',
     },
@@ -57,7 +63,12 @@ const Search = ({ classes }: Props) => {
                       <SearchBox />
                     </Grid>
                     <Grid item>
-                      <Button variant="contained" color="primary" type="submit">
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        type="submit"
+                        className={classes.button}
+                      >
                         Search
                       </Button>
                     </Grid>

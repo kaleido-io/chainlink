@@ -24,6 +24,10 @@ const styles = (theme: Theme) =>
     },
     button: {
       marginTop: theme.spacing.unit * 2,
+      paddingTop: theme.spacing.unit,
+      paddingBottom: theme.spacing.unit,
+      paddingLeft: theme.spacing.unit * 5,
+      paddingRight: theme.spacing.unit * 5,
     },
   })
 
