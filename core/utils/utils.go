@@ -309,15 +309,22 @@ func CoerceInterfaceMapToStringMap(in interface{}) (interface{}, error) {
 	case map[interface{}]interface{}:
 		m := map[string]interface{}{}
 		for k, v := range typed {
-			coercedKey, ok := k.(string)
-			if !ok {
-				return nil, fmt.Errorf("Unable to coerce key %T %v to a string", k, k)
+			// HACK: in testing we found the OracleRequest events published by Chainlink Oracle contracts
+			// can have a trailing "0:0" entry, we do not yet know what has caused this seemingly invalid
+			// entry in the CBOR encoded event data, so using this "deal-after-the-fact" fix to get around
+			// the problem for now while we continue to investigate the root cause
+			var zero uint64
+			if k != zero {
+				coercedKey, ok := k.(string)
+				if !ok {
+					return nil, fmt.Errorf("Unable to coerce key %T %v to a string", k, k)
+				}
+				coerced, err := CoerceInterfaceMapToStringMap(v)
+				if err != nil {
+					return nil, err
+				}
+				m[coercedKey] = coerced
 			}
-			coerced, err := CoerceInterfaceMapToStringMap(v)
-			if err != nil {
-				return nil, err
-			}
-			m[coercedKey] = coerced
 		}
 		return m, nil
 	case []interface{}:
